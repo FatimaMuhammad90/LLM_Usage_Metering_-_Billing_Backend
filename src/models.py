@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Enum
-from sqlalchemy import DateTime, String
+from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Enum, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
@@ -14,5 +13,54 @@ class Tenant(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow,nullable=False)
 
 
-# class Plan(Base):
-#     __tablename__ = "plan"
+class Plan(Base):
+    __tablename__ = "plans"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    api_call_quota: Mapped[int] = mapped_column(nullable=False)
+
+    monthly_price_cents: Mapped[int] = mapped_column(nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow,nullable=False)
+
+
+class Subscription(Base):
+    __tablename__ = "subscriptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    tenant_id: Mapped[int] = mapped_column(
+        ForeignKey("tenants.id"),nullable=False)
+
+    plan_id: Mapped[int] = mapped_column(ForeignKey('plans.id'), nullable=False)
+
+    status: Mapped[str] = mapped_column(String(50), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False,)
+
+
+class UsageEvent(Base):
+
+    __tablename__ = "usage_events"
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "idempotency_key",
+            name="uq_tenant_idempotency_key",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    tenant_id: Mapped[int] = mapped_column(ForeignKey("tenants.id"), nullable=False)
+
+    usage_type: Mapped[str] = mapped_column(String(50), nullable=False)
+
+    quantity: Mapped[int] = mapped_column(nullable=False)
+
+    idempotency_key: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow,nullable=False,)
