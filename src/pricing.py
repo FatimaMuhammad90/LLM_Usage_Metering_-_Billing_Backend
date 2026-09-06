@@ -6,8 +6,8 @@ PRICING = {
     "output": 300,
 }
 
-def calculate_ai_cost(input_tokens: int,cached_input_tokens: int,output_tokens: int,reasoning_tokens: int):
-    
+def calculate_ai_cost(input_tokens: int,cached_input_tokens: int,output_tokens: int, reasoning_tokens: int):
+
     regular_input_tokens = input_tokens - cached_input_tokens
 
     input_cost = regular_input_tokens * PRICING["input"]["standard"]

@@ -37,6 +37,12 @@ class Subscription(Base):
 
     plan_id: Mapped[int] = mapped_column(ForeignKey('plans.id'), nullable=False)
 
+
+    stripe_customer_id: Mapped[str | None] = mapped_column(String(255), nullable=True,)
+
+
+    stripe_subscription_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     status: Mapped[str] = mapped_column(String(50), nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False,)
@@ -63,4 +69,18 @@ class UsageEvent(Base):
 
     idempotency_key: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow,nullable=False,)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow,nullable=False)
+
+
+
+class StripeEvent(Base):
+    __tablename__= "stripe_events"
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    stripe_event_id: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    ) 
