@@ -1,3 +1,4 @@
+# seed.py
 from src.db import sessionLocal
 from src.models import Plan
 

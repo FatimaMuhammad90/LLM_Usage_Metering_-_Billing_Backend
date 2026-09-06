@@ -1,3 +1,4 @@
+# pricing.py
 PRICING = {
     "input": {
         "standard": 100,
@@ -17,3 +18,11 @@ def calculate_ai_cost(input_tokens: int,cached_input_tokens: int,output_tokens: 
     output_cost = total_output_tokens * PRICING["output"]
 
     return input_cost + cached_cost + output_cost
+
+def calculate_monthly_ai_cost(usage_events: list) -> int:
+
+    total_cost = 0
+    for event in usage_events:
+        if event.usage_type == "ai_token":
+                pass
+    return total_cost  

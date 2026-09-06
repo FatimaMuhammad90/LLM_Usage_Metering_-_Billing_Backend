@@ -1,3 +1,5 @@
+# models.py
+
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Enum, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime

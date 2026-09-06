@@ -1,3 +1,4 @@
+# stripe_services.py
 import os
 import stripe
 from dotenv import load_dotenv
