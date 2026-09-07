@@ -1,28 +1,26 @@
 # pricing.py
+from typing import Dict, Any
+
 PRICING = {
     "input": {
-        "standard": 100,
-        "cached": 50,
+        "standard": 100, 
+        "cached": 50,    
     },
-    "output": 300,
+    "output": 300,        
 }
 
-def calculate_ai_cost(input_tokens: int,cached_input_tokens: int,output_tokens: int, reasoning_tokens: int):
+def calculate_ai_cost( input_tokens: int, cached_input_tokens: int, output_tokens: int, reasoning_tokens: int) -> int:
 
-    regular_input_tokens = input_tokens - cached_input_tokens
-
+    regular_input_tokens = max(0, input_tokens - cached_input_tokens)
+    
+    # Calculate input costs
     input_cost = regular_input_tokens * PRICING["input"]["standard"]
     cached_cost = cached_input_tokens * PRICING["input"]["cached"]
-
+    
+    # Output: reasoning tokens are output tokens!
     total_output_tokens = output_tokens + reasoning_tokens
     output_cost = total_output_tokens * PRICING["output"]
-
-    return input_cost + cached_cost + output_cost
-
-def calculate_monthly_ai_cost(usage_events: list) -> int:
-
-    total_cost = 0
-    for event in usage_events:
-        if event.usage_type == "ai_token":
-                pass
-    return total_cost  
+    
+    # Total cost
+    total_cost = input_cost + cached_cost + output_cost
+    return total_cost

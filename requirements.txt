@@ -5,7 +5,7 @@ fastapi
 uvicorn
 pydantic
 stripe
-
+pytest
 
 
 

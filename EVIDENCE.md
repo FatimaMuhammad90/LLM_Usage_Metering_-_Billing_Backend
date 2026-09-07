@@ -22,5 +22,16 @@ Updated to Pro Status
 ## Idempotency Test on terminal 
 
 First request
- 
+Generated specific idempotency-key with the specific tenant
+Second request demanded the same, it returned the same id:1, instead of making a new one
+
 ![alt text](image-8.png)
+
+# Quota Test
+
+
+![alt text](image-9.png)
+
+Server Flags it successfully
+
+![alt text](image-10.png)
