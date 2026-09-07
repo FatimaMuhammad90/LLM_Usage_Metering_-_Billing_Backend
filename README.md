@@ -126,7 +126,7 @@ capstone/
 
 # Database Design
 
-The system uses four core business tables plus a Stripe webhook event table.
+The system uses four core business tables plus a Stripe webhook event table. The system did not add migrations as we can achieve persistence through Docker and database is small. Dockerfile can be used to create the image easily. 
 
 ## Tenants
 
