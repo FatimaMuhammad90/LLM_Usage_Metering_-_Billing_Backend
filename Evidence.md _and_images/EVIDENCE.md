@@ -54,19 +54,21 @@ stripe trigger checkout.session.completed
 Webhook Event Flow
 When a test event is triggered, the following happens:
 
-Stripe CLI creates test fixtures (product, price, payment method, checkout session)
+1. Stripe CLI creates test fixtures (product, price, payment method, checkout session)
 
-Stripe simulates the checkout flow and generates webhook events
+2. Stripe simulates the checkout flow and generates webhook events
 
-Events are forwarded to your local FastAPI application
+3. Events are forwarded to your local FastAPI application
 
-Our app verifies the Stripe signature
+4. Our app verifies the Stripe signature
 
-Our app processes the event and updates the database
+5. Our app processes the event and updates the database
 
-Our app returns 200 OK for each successfully processed event
+6.Our app returns 200 OK for each successfully processed event
 
 <img width="844" height="341" alt="Screenshot 2026-09-07 215758" src="https://github.com/user-attachments/assets/40b4c679-db06-4763-82ce-912de6c64fc8" />
+
+
 
 
 Other Stripe test events (like subscription.deletion and subscription.updation) can be triggered through the Stripe CLI as required.
@@ -74,73 +76,106 @@ Other Stripe test events (like subscription.deletion and subscription.updation) 
 The webhook endpoint verifies the Stripe signature before processing any event.
 
 
+
+
 ## Stripe Product Store
+
 
 Created the "Pro Plan" product in Stripe test mode using Stripe CLI. The sandbox environment is called "Hotcakes".
 
 ![Stripe test product](image.png)
 
+
 # Stripe Integration Testing
+
 
 The Stripe integration was tested to verify that a tenant could successfully upgrade from the Free plan to the Pro plan.
 
+
 ## 1. Create a Test Customer
 
+
 A test customer was created successfully through the API.
+
 
 ![Created test customer](image-2.png)
 
 ## 2. Check the Current Plan
 
+
 The customer's current subscription status was queried to confirm that the tenant was initially on the Free plan.
+
 
 ![Current plan status](image-3.png)
 
+
 ## 3. Create a Stripe Checkout Session
+
 
 A Stripe Checkout session was created for the Pro plan.
 
+
 The `price_id` used for the Checkout session was obtained from the Stripe Dashboard after creating the test product in the `hotcakes_sandbox` environment.
+
 
 ![Stripe price ID](image-14.png)
 
+
 The customer was then queried to verify the associated billing information.
+
 
 ![Customer query](image-4.png)
 
 ## 4. Open the Checkout Page
 
+
 The Checkout request successfully returned a Stripe Checkout URL.
+
 
 ![Stripe Checkout URL](image-5.png)
 
+
 ## 5. Complete the Stripe Test Payment
+
 
 The generated URL opened the Stripe payment page for the Pro plan.
 
+
 Stripe's test card number `4242 4242 4242 4242` was used to simulate a successful payment.
+
 
 ![Stripe test payment](image-7.png)
 
+
 ## 6. Verify the Pro Plan Upgrade
+
 
 After completing the test payment, the customer's subscription status was queried again.
 
+
 The tenant was successfully updated from the Free plan to the Pro plan.
+
 
 ![Updated Pro plan status](image-6.png)
 
+
 # Idempotency Test
+
 
 The usage metering idempotency mechanism was tested directly through the terminal.
 
+
 ### First Request
+
 
 A specific `idempotency_key` was generated for a tenant, and the usage request was submitted successfully.
 
+
 ### Second Request
 
+
 The same request was submitted again using the same `idempotency_key`.
+
 
 Instead of creating a new usage event, the API returned the existing event with `id: 1`.
 
