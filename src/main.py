@@ -237,7 +237,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     # Handle customer.subscription.deleted
     elif event["type"] == "customer.subscription.deleted":
         stripe_sub = event["data"]["object"]
-        stripe_sub_dict = stripe_sub.to_dict()  # ✅ Convert to dict
+        stripe_sub_dict = stripe_sub.to_dict()  
         
         subscription = db.scalar(
             select(Subscription).where(
@@ -287,6 +287,8 @@ def checkout(tenant_id: int, request: CheckoutRequest, db: Session = Depends(get
 def trigger_alerts(db: Session = Depends(get_db)):
     alerts = check_usage_alerts()
     return{ "status": "completed", "alerts_found" : len(alerts), "alerts": alerts}
+
+
 
 
 
