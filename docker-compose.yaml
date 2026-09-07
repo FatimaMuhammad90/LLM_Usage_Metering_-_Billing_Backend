@@ -1,9 +1,18 @@
 services:
   db:
     image: postgres:17
-    environment: 
+    environment:
       POSTGRES_DB: metering
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/metering
+    ports:
+      - "8000:8000"

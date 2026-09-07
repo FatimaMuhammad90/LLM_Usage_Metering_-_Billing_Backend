@@ -281,41 +281,6 @@ def checkout(tenant_id: int, request: CheckoutRequest, db: Session = Depends(get
         "session_id": session.id,
     }
 
-
-
-@app.post("/tenants/{tenant_id}/billing/checkout")
-def create_checkout(
-    tenant_id: int,
-    request: CheckoutRequest,  # { plan_id: int, price_id: str }
-    db: Session = Depends(get_db)
-):
-    """Create a Stripe Checkout session for subscription upgrade"""
-    
-    # Verify tenant exists
-    tenant = db.get(Tenant, tenant_id)
-    if not tenant:
-        raise HTTPException(status_code=404, detail="Tenant not found")
-    
-    # Verify plan exists
-    plan = db.get(Plan, request.plan_id)
-    if not plan:
-        raise HTTPException(status_code=404, detail="Plan not found")
-    
-    # Create Stripe Checkout session
-    try:
-        session = create_checkout_session(
-            tenant_id=tenant_id,
-            plan_id=request.plan_id,
-            price_id=request.price_id,
-        )
-    except stripe.StripeError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-    return {
-        "checkout_url": session.url,
-        "session_id": session.id,
-    }
-
 # alert checkpoint
 
 @app.post("/admin/alerts")

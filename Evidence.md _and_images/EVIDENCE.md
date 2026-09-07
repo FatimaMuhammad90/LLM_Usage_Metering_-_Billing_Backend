@@ -1,3 +1,35 @@
+The Stripe CLI can be used to forward webhook events to the local API.
+
+Start the webhook listener:
+
+stripe listen --forward-to http://127.0.0.1:8000/webhooks/stripe
+
+Stripe CLI will provide a webhook signing secret.
+
+Set that secret in .env:
+
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+
+Restart the API after changing environment variables.
+
+Triggering Stripe Test Events
+
+Stripe CLI can be used to generate test webhook events.
+
+Example:
+
+stripe trigger checkout.session.completed
+
+Other Stripe test events can also be generated through the CLI.
+
+The webhook endpoint verifies the Stripe signature before processing the event.
+
+
+            ![alt text](image-1.png)
+
+
+An In-memory SQLite database is added from test in tests/conftest.py
+
 Created a Test customer 
 ![alt text](image-2.png)
 
@@ -35,7 +67,13 @@ Server Flags it successfully
 
 ![alt text](image-10.png)
 
-## Quota alert added
+## BackGround Job: Quota alert added
+
+**Implementation:** `jobs/usage_alerts.py`
+
+**Purpose:** Proactively monitor tenant usage and alert at 80% and 100% of quota.
+
+Manual Triggered, we can host this on cloud by the Github actions cron jobs but that would require cloud based database on enviorments like supabase.
 
 ### Quota Warning at 80% Usage
 

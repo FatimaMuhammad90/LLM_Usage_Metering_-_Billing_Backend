@@ -1,8 +1,8 @@
 sqlalchemy
-psycopg[binary] 
+psycopg2-binary 
 python-dotenv
 fastapi
-uvicorn
+uvicorn[standard]
 pydantic
 stripe
 pytest
