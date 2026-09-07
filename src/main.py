@@ -1,26 +1,23 @@
 # main.py
 from datetime import datetime
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
-
-from .schemas import UsageRequest
-from .services import MeterService
-from .db import sessionLocal
-from .models import StripeEvent, Subscription
-from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy import select
 from pydantic import BaseModel
-
 import os
 import stripe
 from stripe import error as StripeError
 from dotenv import load_dotenv
-from fastapi import Request
 
+from typing import Dict, Any
+
+
+from .services import MeterService
+from .db import sessionLocal
 from .stripe_service import create_checkout_session
-from sqlalchemy import select
-
-from .models import Tenant, Plan, Subscription
+from .models import Tenant, Plan, Subscription, StripeEvent
 from .schemas import TenantCreate, UsageRequest
+from jobs.usage_alerts import check_usage_alerts
 
 load_dotenv()
 
@@ -153,7 +150,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
 
     try:
         event = stripe.Webhook.construct_event(payload, signature, STRIPE_WEBHOOK_SECRET)
-    except (ValueError, stripe.error.SignatureVerificationError):
+    except (ValueError, StripeError.SignatureVerificationError):
         raise HTTPException(status_code=400, detail="Invalid Stripe webhook")
 
     # Deduplication
@@ -311,7 +308,7 @@ def create_checkout(
             plan_id=request.plan_id,
             price_id=request.price_id,
         )
-    except stripe.error.StripeError as e:
+    except stripe.StripeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
     return {
@@ -319,6 +316,12 @@ def create_checkout(
         "session_id": session.id,
     }
 
+# alert checkpoint
+
+@app.post("/admin/alerts")
+def trigger_alerts(db: Session = Depends(get_db)):
+    alerts = check_usage_alerts()
+    return{ "status": "completed", "alerts_found" : len(alerts), "alerts": alerts}
 
 
 
