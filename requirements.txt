@@ -8,8 +8,4 @@ stripe
 pytest
 
 
-
-
- .\.venv\Scripts\python.exe -m uvicorn src.main:app --reload   
-
- stripe listen --forward-to localhost:8000/webhooks/stripe    
+ 
