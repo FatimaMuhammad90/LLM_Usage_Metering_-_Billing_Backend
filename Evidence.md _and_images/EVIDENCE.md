@@ -24,30 +24,62 @@ Other Stripe test events can also be generated through the CLI.
 
 The webhook endpoint verifies the Stripe signature before processing the event.
 
+## Created the Table in docker
+    
+    ![alt text](image-16.png)
 
-            ![alt text](image-1.png)
 
 
 An In-memory SQLite database is added from test in tests/conftest.py
 
-Created a Test customer 
-![alt text](image-2.png)
+## Created the Product Store through StripeCLI with a random name called hotcakes
 
-got the current plan status
-![alt text](image-3.png)
+    
+    ![alt text](image.png)
+
+## Tested the Stripe Integration
+
+### Checked whether the user can go from free plan to pro plan 
+
+1. Created a Test Customer
+
+        ![alt text](image-2.png)
 
 
-created a checkout session
-![alt text](image-4.png)
+2. Got the current plan status of the Test Customer
+        
+        ![alt text](image-3.png)
 
-The checkout status 
-![alt text](image-5.png)
 
-The URL opened in the payement area
-![alt text](image-7.png)
+3. Created a checkout session
 
-Updated to Pro Status
-![alt text](image-6.png)
+    We got this price_id from the Dashboard through the Stripe CLI, when we created the product in the hotcakes_sandbox.
+       
+        ![alt text](image-14.png)
+
+    Query for the Customer:
+
+        ![alt text](image-4.png)
+
+3. The checkout status 
+
+    Making the purchase, resulted in this URl
+
+        ![alt text](image-5.png)
+
+
+4. Stripe Payment
+
+    The URL led to the Payment area for Pro plan product for the customer 
+    Adding the 4242 4242 4242 4242 test card number, let us process it 
+        
+        ![alt text](image-7.png)
+
+
+5. Updated to Pro Status
+    Querying the status of the customer to check their updated status, resulted successfully
+
+        ![alt text](image-6.png)
 
 
 
@@ -113,4 +145,13 @@ One for the 80% usage warning and one critical usage warning
 
 ![alt text](image-13.png)
 
-Output
+## Tests
+
+ Running all test in the terminal 
+ Ran successfully
+
+        ![alt text](image-15.png)
+
+You can run the Test by self too, after cloning the repo and running the command 
+
+   ` pytest tests/ -v`                                                    
